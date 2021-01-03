@@ -7,7 +7,7 @@
 </head>
 <body>
     <div class='message_container'>
-    <h1>Open the console and type: playRound(); to play a game of rock, paper, scissors!</h1>
+    <h1>Open the console and type: playRound(); to play a round of rock, paper, scissors! Type startGame(); to play five rounds!</h1>
     </div>
     <script>
         let isFirstRound = true;
@@ -113,6 +113,12 @@
             //All together I'm very proud of my work on this program because it's a more complex solution that I could have made...
             //...by not including basic computer AI and incorportating an index checking system. I'm glad I did, though! It all...
             //...makes for more elegant code and a more enjoyable playing experience.
+
+        function startGame(){
+            for(i = 0; i < 6; i++){
+                playRound();
+            }
+        }
     </script>
 </body>
 

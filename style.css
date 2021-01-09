@@ -1,12 +1,79 @@
 *{
     background-color: Black;
+    margin: 0;
+    border: 0;
+    font-family:'Franklin Gothic Medium';
+    font-style: italic;
 }
-.message_container{
+
+body{
     height: 100vh;
+    padding: 0;
+    margin: 0;
 }
+
 h1{
-    font-family: Arial;
-    color: green;
     text-align: center;
-    padding-top: 25vh;
+    font-family:Impact;
+    color: whitesmoke;
+    padding-top: 10vh;
+    background: transparent;
+}
+
+h2{
+    text-align: center;
+    font-family:Impact;
+    color: whitesmoke;
+    background: transparent;
+}
+
+.message_container{
+    height: 99vh;
+    border:3px;
+    border-style:ridge;
+    border-radius: 4%;
+}
+.choices_container{
+    display: flex;
+    justify-content: space-evenly;
+    padding-top: 15vh;
+    width: 100%;
+}
+.player_choices{
+    background-color: #f5f4f0;
+    height: 100%;
+    transition: all .2s ease-in-out;
+}
+
+.player_choices:hover{
+    transform: scale(1.1);
+}
+.player_choices:focus{
+    outline: maroon auto 12px;
+}
+
+.explain_message{
+    padding-top: 3vh;;
+}
+
+.choice_text{
+    font-size: 24px;
+    font-family:'Franklin Gothic Medium';
+    color: 'black';
+    background-color: #f5f4f0;
+}
+
+.counter_containers{
+    padding-top: 10vh;
+    color: White;
+}
+.round_container{
+    display: flex;
+    justify-content: space-evenly;
+    font-size: 40px;
+    text-align: center;
+}
+
+.actual_count{
+    padding-top: 3vh;
 }

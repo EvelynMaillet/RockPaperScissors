@@ -7,9 +7,49 @@
 </head>
 <body>
     <div class='message_container'>
-    <h1>Open the console and type: playRound(); to play a round of rock, paper, scissors! Type startGame(); to play five rounds!</h1>
+        <h1>Rock, Paper, or Scissors?</h1>
+        <h2 class='explain_message'>"A good player predicts the next hand, </h2>
+        <h2 class='explain_two'>a bad player predicts the last..."</h2>
+        <div class='choices_container'>
+            <button id='0' class='player_choices'>
+                <div class="flex">
+                    <div class="flex_1"><img src="rock.png"/></div>
+                    <div class="choice_text flex_2">Make this choice:</div>
+                    <div class="choice_text flex_3">Rock</div>
+                </div>
+            </button>
+            <button id='1' class='player_choices'>
+                <div class="flex">
+                    <div class="flex_1"><img src="paper.png"/></div>
+                    <div class="choice_text flex_2">Make this choice:</div>
+                    <div class="choice_text flex_3">Paper</div>
+                </div>
+            </button>
+            <button id='2' class='player_choices'>
+                <div class="flex">
+                    <div class="flex_1"><img src="scissors.png"/></div>
+                    <div class="choice_text flex_2">Make this choice:</div>
+                    <div class="choice_text flex_3">Scissors</div>
+                </div>
+            </button>
+
+        </div>
+        <div class='counter_containers'>
+            <div class='round_container'>
+                <div class='win_container'>Player wins:
+                    <div id='player_count' class='actual_count'>
+                        0
+                    </div>
+                </div>
+                <div class='win_container'>Computer wins:
+                    <div id='computer_count' class='actual_count'>
+                        0
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <script>
+    <!--<script>
         let isFirstRound = true;
         let selections = ['rock', 'paper', 'scissors'];
         let playerPrevSelection = 0;
@@ -120,6 +160,104 @@
             }
         }
     </script>
+-->
+
+<script>
+    let playerSelection = 0;
+    const buttons = document.querySelectorAll('.player_choices');
+    let isFirstRound = true;
+    const playerCounter = document.querySelector('#player_count');
+    const computerCounter = document.querySelector('#computer_count');
+    let playerScore = 0;
+    let compScore = 0;
+    const explainText=document.querySelector('.explain_message');
+    const explainTwo=document.querySelector('.explain_two');
+        let selections = ['rock', 'paper', 'scissors'];
+        let playerPrevSelection = 0;
+        function computerPlay(){
+
+            // Checks if it's the first round. If it is, computer throws random selection.
+            if(isFirstRound){
+                isFirstRound = false;
+                return Math.floor(Math.random() * 3);
+            }
+            // If not first round, computer throws hand that would have beaten player's previous hand.
+            // In my experience, this is how most sub-average RPSers play.
+            // It is not difficult to beat these players every time once you see their pattern.
+            else{
+                if(playerPrevSelection == 2){
+                return 0;
+                } else{
+                    return playerPrevSelection + 1;
+                }
+            }
+        }
+
+    // This function holds all the game logic.
+        // TL;DR on this is that I declare two variables that hold strings for the win/loss state of the game and the message explaining why respectively.
+        // Maybe it's a tad overengineered, but the way this works is that the selections get passed as indices generated from each strings' positions...
+        //...in the global selection array.
+        // This lets me check who won based on the positions in said array instead of having to compare strings with a huge if elif block.
+        //It's much more elegant to compare if one index comes before or after another and generate the win/loss state and explainer message from that...
+        //...as opposed to, again, writing ifs and elifs until the heat death of the universe.
+        function gameLogic(playerSelection, computerSelection){
+            let gameState = '';
+            let explainMessage = '';
+
+            //Helper method to generate win/loss message.
+            function genExplainMessage(winHand, loseHand){
+                return `${winHand} beats ${loseHand}...`;
+            }
+
+            //Method explained in the TL;DR. All this does is make checks to see which index is higher or lower and determines the...
+            //...game outcome based on that.
+            //The way I've declared the global selections array is key to this.
+            //It's set up so that higher indicies always lose to lower indicies except for selections[2] (scissors)...
+            //...which loses to selections[0] (rock). This is mitigated by including checks for this in the singular loss and win if and elif respectively.
+            //If I did not catch this win and loss state, I would have been comparing indices that were out of bounds...
+            //...in the selection array (ie selections[3] against selections[2]).
+            //This is bad. Make sure your logic doesn't try to access indices that are out of bounds. Just don't do that or your program will crash.
+
+            function updateCompScore(){
+                compScore += 1;
+                computerCounter.textContent = compScore;
+            }
+
+            function updatePlayerScore(){
+                playerScore += 1;
+                playerCounter.textContent = playerScore;
+            }
+
+            function calcGameState(playerSelection, computerSelection){
+                if((playerSelection+1 != 3 && playerSelection+1 == computerSelection) || (playerSelection == 2 && computerSelection == 0)){
+                    gameState = 'You lose';
+                    updateCompScore();
+                    explainMessage = genExplainMessage(selections[computerSelection], selections[playerSelection]);
+                }else if((computerSelection+1 != 3 && computerSelection+1 == playerSelection) || (computerSelection == 2 && playerSelection == 0)){
+                    gameState = 'You win';
+                    updatePlayerScore();
+                    explainMessage = genExplainMessage(selections[playerSelection], selections[computerSelection]);
+                } else if(computerSelection == playerSelection){
+                    gameState = 'It\'s a draw';
+                    explainMessage = 'Try not to do that next time, okay?';
+                }
+            }
+
+            //Runs the game state generator.
+            calcGameState(playerSelection, computerSelection);
+
+            explainText.textContent = `Player: ${selections[playerSelection]} \nComputer: ${selections[computerSelection]} \n`;
+            explainTwo.textContent = `${gameState}! ${explainMessage}. \n`;
+        }
+
+    buttons.forEach((button => {button.addEventListener('click', ()=>{
+        playerSelection = parseInt(button.id);
+        compSelection = computerPlay();
+        playerPrevSelection = playerSelection;
+        gameLogic(playerSelection, compSelection);
+        //startGame();
+    })}));
+</script>
 </body>
 
 </html>
